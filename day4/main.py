@@ -1,5 +1,6 @@
 maparr = {}
 count = 0
+mascount = 0
 
 with open("puzzle.txt", encoding="utf-8") as file:
     x = 0
@@ -19,10 +20,75 @@ def find_the_x(maparr):
         x = 0
         for col in row.values():
             if col == "X":
-                print("found one at x", x, " y", y)
                 check_perimeter(maparr, x, y)
             x += 1
         y += 1
+
+
+def find_the_a(maparr):
+    y = 0
+    for row in maparr.values():
+        x = 0
+        for col in row.values():
+            if col == "A":
+                print("found one at x", x, " y", y)
+                check_for_x_mas(maparr, x, y)
+            x += 1
+        y += 1
+
+
+def check_for_x_mas(maparr, x, y):
+    global mascount
+    ## looking for
+    # M M  S S  S M  M S
+    #  A    A    A    A
+    # S S  M M  S M  M S
+
+    # find max size of the map
+    xmax = len(maparr)
+    ymax = len(maparr[0])
+
+    # is there sufficient room around the A?
+    if (
+        x + 1 <= len(maparr[0]) - 1
+        and x - 1 >= 0
+        and y + 1 <= len(maparr) - 1
+        and y - 1 >= 0
+    ):
+        print(
+            maparr[y - 1][x - 1],
+            maparr[y - 1][x + 1],
+            maparr[y + 1][x - 1],
+            maparr[y + 1][x + 1],
+        )
+        if (
+            maparr[y - 1][x - 1] == "M"
+            and maparr[y - 1][x + 1] == "M"
+            and maparr[y + 1][x - 1] == "S"
+            and maparr[y + 1][x + 1] == "S"
+        ):
+            mascount += 1
+        elif (
+            maparr[y - 1][x - 1] == "S"
+            and maparr[y - 1][x + 1] == "S"
+            and maparr[y + 1][x - 1] == "M"
+            and maparr[y + 1][x + 1] == "M"
+        ):
+            mascount += 1
+        elif (
+            maparr[y - 1][x - 1] == "S"
+            and maparr[y - 1][x + 1] == "M"
+            and maparr[y + 1][x - 1] == "S"
+            and maparr[y + 1][x + 1] == "M"
+        ):
+            mascount += 1
+        elif (
+            maparr[y - 1][x - 1] == "M"
+            and maparr[y - 1][x + 1] == "S"
+            and maparr[y + 1][x - 1] == "M"
+            and maparr[y + 1][x + 1] == "S"
+        ):
+            mascount += 1
 
 
 def check_perimeter(maparr, x, y):
@@ -107,5 +173,7 @@ def find_string(maparr, string, x, y, xprogression, yprogression):
 
 
 find_the_x(maparr)
+find_the_a(maparr)
 
 print("total: ", count)
+print("mastotal: ", mascount)
